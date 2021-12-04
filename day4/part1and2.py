@@ -15,6 +15,7 @@ class Board:
             x = math.floor(index/self.width)
             y = index%self.height
             if self.check_full_col(y) or self.check_full_row(x):
+                self.win_count += 1
                 return True
         return False
 
@@ -33,13 +34,8 @@ class Board:
     def calculate_score(self):
         return sum(list(map(lambda it: it[1] if not self.marked[it[0]] else 0, enumerate(self.numbers))))
 
-    def print_marked(self):
-        for y in range(self.height):
-            for x in range(self.width):
-                print(int(self.marked[x+y*self.width]), end='')
-            print()
-
     def reset(self):
+        self.win_count = 0
         self.marked = [False]*len(numbers)
 
 # read input
@@ -47,13 +43,24 @@ input = open("input.txt", "r").read().split("\n\n")
 numbers = list(map(int, input[0].split(",")))
 boards = list(map(lambda numbers: Board(list(map(int, numbers.split())), 5, 5), input[1:]))
 
-# process numbers
+# process parts
 def part1():
     for number in numbers:
         for board in boards:
             if board.check_and_mark(number):
-                print(board.calculate_score()*number)
-                return
-    print("No winners?")
+                return (board.calculate_score()*number)
 
-part1()
+def part2():
+    for board in boards:
+        board.reset()
+    boards_won = 0
+    for number in numbers:
+        for board in boards:
+            if board.check_and_mark(number):
+                if board.win_count == 1:
+                    boards_won += 1
+                    if boards_won >= len(boards):
+                        return (board.calculate_score()*number)
+
+print("Part 1: %s" % part1())
+print("Part 2: %s" % part2())
