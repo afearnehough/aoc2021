@@ -7,7 +7,7 @@ def calculate(data, invert):
         bit_sum = sum([line[bit_i] for line in data])
         bit_common = int(bit_sum >= (len(data)-bit_sum))
         if len(data) > 1:
-            data = filter(lambda line: line[bit_i] == (bit_common^invert), data)
+            data = list(filter(lambda line: line[bit_i] == (bit_common^invert), data))
         else: break
     return data
 
