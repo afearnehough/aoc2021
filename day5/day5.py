@@ -1,9 +1,11 @@
-class Point:
+class Vec2:
     def __init__(self, x, y):
         self.x, self.y = x, y
 
     def subtract(self, point):
         return Point(self.x-point.x, self.y-point.y)
+
+
 
     def __str__(self):
         return "%d,%d" % (self.x, self.y)
@@ -12,7 +14,7 @@ class Map:
     def __init__(self):
         self.map = []
 
-    def add_segment(self, a: Point, b: Point):
+    def add_segment(self, a: Vec, b: Vec):
         print(b.subtract(a))
 
 class Input:
@@ -24,8 +26,8 @@ class Input:
 
     def parse_segment(self, line):
         return (
-            Point(*self.parse_segment_coords(line.split()[0])),
-            Point(*self.parse_segment_coords(line.split()[2])))
+            Vec2(*self.parse_segment_coords(line.split()[0])),
+            Vec2(*self.parse_segment_coords(line.split()[2])))
 
 
 input = Input()
