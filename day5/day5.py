@@ -14,6 +14,7 @@ class Mapper:
     def plot_segments(self, filter_func = lambda seg: True):
         for segment in self.segments:
             if filter_func(segment):
+                # DDA https://en.wikipedia.org/wiki/Digital_differential_analyzer_(graphics_algorithm)
                 x0, y0 = segment[0]
                 x1, y1 = segment[1]
                 dx, dy = (x1-x0), (y1-y0)
