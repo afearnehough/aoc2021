@@ -1,5 +1,5 @@
 class Decoder:
-    def __init__(self):
+    def __init__(self, signal_patterns):
         pass
 class Display:
     def __init__(self, digit_count=4, digit_width=6, digit_height=7):
