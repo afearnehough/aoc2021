@@ -18,11 +18,9 @@ for y in range(size[1]):
 
             while len(basin_search_stack):
                 (sx, sy) = basin_search_stack.pop()
-                cell_index  = (sx+sy*size[0])
                 cell_height = cell(sx, sy)
-
-                if cell_height < 9 and cell_index not in cells_visited:
-                    cells_visited[cell_index] = True
+                if cell_height < 9:
+                    data[sy][sx] = 9
                     basin_size += 1
                     basin_search_stack += [((sx+1), sy), ((sx-1), sy), (sx, (sy+1)), (sx, (sy-1))]
 
