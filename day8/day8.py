@@ -46,12 +46,6 @@ class Decoder:
                     for d_key in self.d_map.keys():
                         self.d_map[d_key] = list(filter(lambda seg_v: seg_v in compatible if d_key in pattern else seg_v not in compatible, self.d_map[d_key]))
 
-        # clean-up (absolutely shocking)
-        for pattern in patterns:
-            if len(pattern) == 5:
-
-
-
         # for segment, possible in self.d_map.items():
         #     if len(possible) == 2:
         #         if possible[0] == 'c' and possible[1] == 'f':
@@ -59,8 +53,8 @@ class Decoder:
 
         #             else:
 
-        for segment, possible in self.d_map.items():
-            print(segment, possible)
+        # for segment, possible in self.d_map.items():
+        #     print(segment, possible)
 
 
 
