@@ -37,10 +37,21 @@ class Decoder:
                 else:
                     self.mapping[6] = pattern
 
+    def decode(self, values):
+        return [self.mapping.index(value) for value in [str_sort(value) for value in values]]
+        
     def get_patterns_of_length(self, length):
         return list(filter(lambda pattern: len(pattern) == length, self.patterns))
 
 
+uniques = 0
+total = 0
 for entry in input:
-    decoder = Decoder(entry.split("|")[0].split())
-    break
+    (patterns, output) = entry.split("|")
+    decoder = Decoder(patterns.split())
+    result = decoder.decode(output.split())
+    uniques += sum([value in [1, 4, 7, 8] for value in result])
+    total += int("".join(map(str, result)))
+
+print("Part 1: %d" % uniques)
+print("Part 2: %d" % total)
