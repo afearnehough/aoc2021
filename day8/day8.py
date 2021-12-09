@@ -35,39 +35,47 @@ class Decoder:
     def __init__(self, patterns):
         self.d_map = dict.fromkeys([x for x in "abcdefg"], [x for x in "abcdefg"])
         self.n_map = list(map(lambda number: [segment for segment in number], [
-            "abcefg", "cf", "acdeg", "acdfg", "bcdf", "abdfg", "abdefg", "acf", "abcdefg", "abcdfg"
+            "abcefg", "cf", "acdeg", "acdfg", "bcdf", "abdfg", "abdefg", "acf", "abcdefg", "abcdfg",
         ]))
 
-        def is_compatible(pattern, number):
-            if len(number) != len(pattern):
-                return False
-            for seg_i in pattern:
-                for seg_j in number:
-                    if seg_j not in self.d_map[seg_i]:
-                        print("%s: %s not in %s"  % ("".join(number), seg_j, "".join(self.d_map[seg_i])))
-                        return False
-            return True
+        for i in range(2): # 2 iterations
+            for pattern in patterns:
+                compatible = list(filter(lambda number: len(number) == len(pattern), self.n_map))
+                if len(compatible) == 1:
+                    compatible = compatible[0]
+                    for d_key in self.d_map.keys():
+                        self.d_map[d_key] = list(filter(lambda seg_v: seg_v in compatible if d_key in pattern else seg_v not in compatible, self.d_map[d_key]))
 
+        # clean-up (absolutely shocking)
         for pattern in patterns:
-            compatible = list(filter(lambda number: is_compatible(pattern, number), self.n_map))
+            if len(pattern) == 5:
 
-            print()
-            print(pattern, compatible)
-            for k, v in self.d_map.items():
-                print(k, v)
 
-            if len(compatible) == 1:
-                compatible = compatible[0]
-                for d_key in self.d_map.keys():
-                    if d_key not in pattern:
-                        self.d_map[d_key] = list(filter(lambda seg_v: seg_v not in compatible, self.d_map[d_key]))
-                    else:
-                        self.d_map[d_key] = list(filter(lambda seg_v: seg_v in compatible, self.d_map[d_key]))
+
+        # for segment, possible in self.d_map.items():
+        #     if len(possible) == 2:
+        #         if possible[0] == 'c' and possible[1] == 'f':
+        #             self.d_map[segment] = ['c'] if 'c' in self.n_map[2]:
+
+        #             else:
+
+        for segment, possible in self.d_map.items():
+            print(segment, possible)
+
 
 
 ##-----------------------------------------------------------------------------------------------##
 
 display = Display()
-decoder = Decoder("be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb".split())
-display.set_digit(0, "abcdefg")
+
+input = open("input.txt", "r").read().splitlines()
+for entry in input:
+    decoder = Decoder(entry.split("|")[0].split())
+    break
+
+
+display.set_digit(0, "acdeg")
+display.set_digit(1, "cf")
+display.set_digit(2, "abdfg")
+display.set_digit(3, "abdefg")
 display.display()
