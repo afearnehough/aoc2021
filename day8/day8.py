@@ -4,7 +4,7 @@ def str_sort(string):
     return "".join(sorted(string))
 
 def str_common(string1, string2):
-    return len(list(set(string1).intersection(string2)))
+    return len(set(string1).intersection(string2))
 
 class Decoder:
     def __init__(self, patterns):
