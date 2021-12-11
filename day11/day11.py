@@ -8,10 +8,9 @@ def display():
             print(data[x+y*length], end='')
         print()
 
-flashes = 0
-
-for step in range(0, 100):
+def step():
     stack = []
+    flashes = 0
 
     def charge(x, y):
         index = (x+y*length)
@@ -19,12 +18,11 @@ for step in range(0, 100):
         if data[index] > 9:
             data[index] = 0
             stack.append((x, y))
-            global flashes
+            nonlocal flashes
             flashes += 1
 
     for y in range(length):
         for x in range(length):
-            index = (x+y*length)
             charge(x, y)
     while len(stack):
         (x, y) = stack.pop()
@@ -34,4 +32,15 @@ for step in range(0, 100):
                 if data[(ax+ay*length)] != 0:
                     charge(ax, ay)
 
-print("Part 1: %d" % flashes)
+    return flashes
+
+
+print("Part 1: %d" % sum([step() for i in range(100)]))
+step_count = 100
+while step() != (length*length):
+    step_count += 1
+print("Part 2: %d" % (step_count+1))
+
+
+
+
