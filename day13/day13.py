@@ -16,14 +16,12 @@ def draw(coords):
 
 def fold(coords, folds, times):
     rline = folds.pop()
+    print(rline)
     new_coords = []
     for coord in coords:
         x, y = coord
         i, j = rline
-        if x > i and y > j:
-            new_coords.append(())
-        else: 
-            new_coords.append(coord)
+        new_coords.append((0, 0) if x > i and y > j else coord)
             # ((x, y-(y-j)*2))
 
     return fold(new_coords, folds, (times-1)) if times > 1 else new_coords
