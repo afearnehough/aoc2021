@@ -12,21 +12,21 @@ class Cave:
         return ((value+(rx+ry-1))%9+1) if (rx+ry) > 0 else value
 
     def find(self, sx, sy, gx, gy):
-        # A* yadda yadda...
+        # Dijkstra yadda yadda...
         queue = []
-        costs = {(sx, sx):0}
+        risks = {(sx, sx):0}
         heapq.heappush(queue, (0, (sx, sy)))
         while len(queue):
             x, y = heapq.heappop(queue)[1]
             if (x == gx and y == gy):
-                return costs[(gx, gy)]
+                return risks[(gx, gy)]
             else:
                 for dx, dy in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
                     ax, ay = (x+dx), (y+dy)
-                    cost_to_move = (costs[(x, y)]+self.cell(ax, ay))
-                    if (ax, ay) not in costs or cost_to_move < costs[(ax, ay)]:
-                        costs[(ax, ay)] = cost_to_move
-                        heapq.heappush(queue, ((cost_to_move+(abs(gx-ax)+abs(gy-ay))), (ax, ay)))
+                    risk = (risks[(x, y)]+self.cell(ax, ay))
+                    if (ax, ay) not in risks or risk < risks[(ax, ay)]:
+                        risks[(ax, ay)] = risk
+                        heapq.heappush(queue, (risk, (ax, ay)))
         return False
 
 cave = Cave([[int(cell) for cell in row] for row in open("input.txt").read().splitlines()])
