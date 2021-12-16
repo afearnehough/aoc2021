@@ -1,4 +1,3 @@
-import operator as op
 from functools import reduce
 
 class Buffer:
@@ -29,7 +28,7 @@ class System:
             7: lambda args: 1 if args[0] == args[1] else 0
         }
 
-    def evalulate_packet(self, buffer):
+    def evaluate_packet(self, buffer):
         version = buffer.read_bits(3)
         type_id = buffer.read_bits(3)
         self.version_sum += version
@@ -46,15 +45,15 @@ class System:
             length_type_id = buffer.read_bits(1)
             if length_type_id == 1:
                 packet_count = buffer.read_bits(11)
-                arguments += [self.evalulate_packet(buffer) for i in range(packet_count)]
+                arguments += [self.evaluate_packet(buffer) for i in range(packet_count)]
             else:
                 bit_length = buffer.read_bits(15)
                 packet_start_offset = buffer.bit_offset
                 while (buffer.bit_offset-packet_start_offset) < bit_length:
-                    arguments.append(self.evalulate_packet(buffer))
+                    arguments.append(self.evaluate_packet(buffer))
             return self.ops[type_id](arguments)
 
 system = System()
-result = system.evalulate_packet(Buffer(open("input.txt").read()))
+result = system.evaluate_packet(Buffer(open("input.txt").read()))
 print("Part 1: %d" % system.version_sum)
 print("Part 2: %d" % result)
