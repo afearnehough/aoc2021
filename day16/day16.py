@@ -13,20 +13,40 @@ class Buffer:
         self.bit_offset += count
         return result
 
-class BITS:
+class System:
     def __init__(self):
-        self.packets = []
+        self.version_sum = 0
 
-    def process_transmission(self, transmission):
-        buffer = Buffer(transmission)
+    def evalulate_packet(self, buffer):
+        version = buffer.read_bits(3)
+        type_id = buffer.read_bits(3)
+        print("Packet header: %d, %d" % (version, type_id))
+        self.version_sum += version
 
+        if type_id == 4: # literal
+            value = 0
+            reading_value_groups = 1
+            while reading_value_groups:
+                reading_value_groups = buffer.read_bits(1)
+                value = ((value<<4)+buffer.read_bits(4))
+            print("Literal value: %d" % value)
+            return value
+        else: # operator
+            op_args = []
+            length_type_id = buffer.read_bits(1)
+            if length_type_id == 0:
+                packet_start_offset = buffer.bit_offset
+                bits_remaining = buffer.read_bits(15)
+                while bits_remaining > 0:
+                    op_args.append(self.evalulate_packet(buffer))
+                    bits_remaining -= (buffer.bit_offset-packet_start_offset)
+            else:
+                packet_count = buffer.read_bits(11)
+                op_args += [self.evalulate_packet(buffer) for i in range(packet_count)]
 
-        print(buffer.read_bits(3))
-        print(buffer.read_bits(3))
-        print(buffer.read_bits(1))
-        print(buffer.read_bits(15))
+        return 0
 
-BITS().process_transmission(open("input.txt").read())
-
-# 00111000000000000110111101000101001010010001001000000000
-# 00111000000000000110111101000101001010010001001000000000
+system = System()
+result = system.evalulate_packet(Buffer(open("input.txt").read()))
+print("Part 1: %d" % system.version_sum)
+print("Part 2: %d" % result)
