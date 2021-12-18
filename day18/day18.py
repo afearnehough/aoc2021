@@ -25,24 +25,32 @@ class SFN:
             el.d += 1
 
     def reduce(self):
-        pass
+        self.explode()
+        while self.split():
+            self.explode()
+
+    def split(self):
+        i = 0
+        while i < len(self.elems):
+            if self.elems[i].v >= 10:
+                val = self.elems[i].v
+                self.elems[i].v = math.floor(val/2)
+                self.elems[i].d += 1
+                self.elems.insert((i+1), SFN.Element(math.ceil(val/2), self.elems[i].d))
+                return True
+            i += 1
+        return False
 
     def explode(self):
         i = 0
         while i < (len(self.elems)-1):
             a, b = self.elems[i], self.elems[i+1]
             if a.d == b.d and a.d >= 4:
-                self.add_value((i-1), self.elems[i].v)
-                self.add_value((i+2), self.elems[i+1].v)
-
-                if len(self.elems):
-
+                if (i-1) >= 0: self.elems[i-1].v += self.elems[i].v
+                if (i+2) < len(self.elems): self.elems[i+2].v += self.elems[i+1].v
                 self.elems[i] = SFN.Element(0, (a.d-1))
                 self.elems.pop(i+1)
             i += 1
-
-    def split(self);
-        pass
 
     def get_elems(self):
         return [el.v for el in self.elems]
