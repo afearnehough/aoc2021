@@ -1,21 +1,19 @@
 import ast, math
 
-# input = [ast.literal_eval(line) for line in open("input.txt").read().splitlines()]
-
 class SFN:
     class Element:
         def __init__(self, value, depth):
             self.v = value
             self.d = depth
 
-    def __init__(self, input):
+    def __init__(self, tree=[]):
         self.elems = []
-        self._traverse_tree(input)
+        self._traverse_tree(tree)
 
     def _traverse_tree(self, node, depth=-1):
         if isinstance(node, list):
-            for child_node in node:
-                self._traverse_tree(child_node, (depth+1))
+            for child in node:
+                self._traverse_tree(child, (depth+1))
         else:
             self.elems.append(SFN.Element(node, depth))
 
@@ -23,6 +21,7 @@ class SFN:
         self.elems += sfn.elems
         for el in self.elems:
             el.d += 1
+        self.reduce()
 
     def reduce(self):
         self.explode()
@@ -52,12 +51,15 @@ class SFN:
                 self.elems.pop(i+1)
             i += 1
 
+    def magnitude(self):
+        return 0
+
     def get_elems(self):
         return [el.v for el in self.elems]
 
-sfn = SFN([[[[4,3],4],4],[7,[[8,4],9]]])
-print(sfn.get_elems())
-sfn.add(SFN([1,1]))
-print(sfn.get_elems())
-sfn.reduce()
-print(sfn.get_elems())
+input = [ast.literal_eval(line) for line in open("input.txt").read().splitlines()]
+total = SFN(input[0])
+for number in input[1:]:
+    total.add(SFN(number))
+print("Part 1 final sum: %s" % total.get_elems())
+print("Part 1 magnitude: %d" % total.magnitude())
