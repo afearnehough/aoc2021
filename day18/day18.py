@@ -52,7 +52,8 @@ class SFN:
             i += 1
 
     def magnitude(self):
-        return 0
+        pass
+
 
     def get_elems(self):
         return [el.v for el in self.elems]
